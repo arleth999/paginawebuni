@@ -42,11 +42,7 @@
     <div class="row">
       <div class="col-sm-3">
         <h5>Categorías</h5>
-        <ul class="list-group">
-          <li class="list-group-item">Categoría 1</li>
-          <li class="list-group-item">Categoría 2</li>
-          <li class="list-group-item">Categoría 3</li>
-          <li class="list-group-item">Categoría 4</li>
+        <ul id="list-group"  class="list-group">
         </ul>
       </div>
 
@@ -125,6 +121,27 @@
       </div></div>`;
   }
 })();
+
+async function cargarCategorias() {
+                try {
+                    const response = await fetch("https://backcvbgtmdesa.azurewebsites.net/api/categorias");
+                    if (!response.ok) {
+                        throw new Error( ' HTTP error! status: ${response.status} ') ;
+                    }
+                    const categorias = await response.json();
+                    const listaCategorias = document.querySelector(".list-group");
+                    categorias.forEach(categoria => {
+                        const li = document.createElement("li");
+                        li.className = "list-group-item";
+                        li.innerHTML =  ' <a href="#" class="text-decoration-none text-dark">${categoria.descripcion}</a> ' ;
+                        listaCategorias.appendChild(li);
+                    });
+                } catch (error) {
+                    console.error("Error al cargar categorías:", error);
+                }
+            }
+
+            cargarCategorias();
 </script>
 
 </body>
