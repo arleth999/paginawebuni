@@ -178,7 +178,7 @@ municipioSelector.addEventListener('change', (event) => {
     obtenerDatosCenso(codigoSeleccionado);
 });
 
-// Llama a la función al cargar la página
+
 document.addEventListener('DOMContentLoaded', () => {
     cargarMunicipios();
     const urlParams = new URLSearchParams(window.location.search);
