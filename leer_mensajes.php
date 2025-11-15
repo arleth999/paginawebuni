@@ -7,7 +7,6 @@ $database = "db_DesaWebDevUMG";
 $username = "usr_DesaWebDevUMG";
 $password = "!ngGuast@360";
 
-// conexion a sql server
 $connectionInfo = [
     "Database" => $database,
     "UID"      => $username,
@@ -17,22 +16,33 @@ $connectionInfo = [
 
 $conn = sqlsrv_connect($server, $connectionInfo);
 
+// error de conexion
 if (!$conn) {
-    echo json_encode(["error" => sqlsrv_errors()]);
-    exit;
+    die(json_encode([
+        "conexion_error" => sqlsrv_errors(),
+        "mensaje" => "X No se pudo conectar al SQL Server"
+    ], JSON_UNESCAPED_UNICODE));
 }
 
-//consulta para traer los mensajes
-$sql = "SELECT TOP 1000 Login_Emisor, Contenido, FechaHora 
+// Consulta SQL
+$sql = "SELECT TOP 1000 Cod_Sala, Login_Emisor, Contenido 
         FROM Chat_Mensaje 
-        ORDER BY FechaHora DESC";
+        Where Login_Emisor='slopezm24' ";
 
 $stmt = sqlsrv_query($conn, $sql);
+
+//error de consulta
+if ($stmt === false) {
+    die(json_encode([
+        "sql_error" => sqlsrv_errors(),
+        "mensaje" => "X La consulta SQL falló"
+    ], JSON_UNESCAPED_UNICODE));
+}
 
 $mensajes = [];
 
 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-    $row["FechaHora"] = $row["FechaHora"]->format("Y-m-d H:i:s");
+  
     $mensajes[] = $row;
 }
 
